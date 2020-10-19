@@ -1,0 +1,31 @@
+kubectl create namespace test
+   90  vim test.yml
+   
+   kind: Namespace
+apiVersion: v1
+metadata:
+  name: test
+  labels:
+    name: test
+    
+   91  kubectl apply -f test.yml 
+   92  vim pod.yml
+   [root@ip-172-31-3-122 jenkins-master]# cat pod.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+  labels:
+    name: mypod
+spec:
+  containers:
+  - name: mypod
+    image: nginx
+   
+   93   kubectl apply -f pod.yaml --namespace=test
+   [root@ip-172-31-3-122 jenkins-master]# kubectl get pods --namespace=test
+NAME    READY   STATUS    RESTARTS   AGE
+mypod   1/1     Running   0          2m1s
+
+   94   kubectl apply -f pod.yml --namespace=test
+   95  kubectl get pods --namespace=test
