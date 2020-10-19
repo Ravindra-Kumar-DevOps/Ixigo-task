@@ -1,0 +1,91 @@
+kubectl create namespace jenkins
+   65  vim jenkins.yml
+   
+   [root@ip-172-31-3-122 jenkins-master]# cat jenkins.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - name: jenkins
+        image: jenkins/jenkins:lts
+        ports:
+          - name: http-port
+            containerPort: 8080
+          - name: jnlp-port
+            containerPort: 50000
+        volumeMounts:
+          - name: jenkins-vol
+            mountPath: /var/jenkins_vol
+      volumes:
+        - name: jenkins-vol
+          emptyDir: {}
+
+   66  kubectl create -f jenkins.yaml --namespace jenkins
+   67  kubectl create -f jenkins.yml --namespace jenkins
+   68  kubectl get pods -n jenkins
+   69  kubectl get pods -n jenkins
+   70  kubectl get pods -n jenkins
+   71  kubectl get pods -n jenkins
+   72  kubectl get pods -n jenkins
+   73  kubectl get pods -n jenkins
+   74  kubectl get pods -n jenkins
+   75  vim jenkins-svc.yml 
+   
+   [root@ip-172-31-3-122 jenkins-master]# cat jenkins-svc.yml 
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30000
+  selector:
+    app: jenkins
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-jnlp
+spec:
+  type: ClusterIP
+  ports:
+    - port: 50000
+      targetPort: 50000
+  selector:
+    app: jenkins
+
+   76  kubectl create -f jenkins-svc.yml --namespace jenkins
+   77  kubectl get services --namespace jenkins
+   78  kubectl get services --namespace jenkins
+   79  kubectl get services --namespace jenkins
+   80  kubectl get nodes -o wide
+
+Login : 
+http://3.15.0.28:30000/login?from=%2F
+
+   84  kubectl get pods -n jenkins
+   85  kubectl logs jenkins-794699f9bc-qm4pd -n jenkins
+   
+Jenkins initial setup is required. An admin user has been created and a password generated.
+Please use the following password to proceed to installation:
+
+d7559050a3814aa599dbc11e735d64d3
+
+This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
+
